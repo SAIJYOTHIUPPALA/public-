@@ -1,0 +1,212 @@
+package com.infy.ekart.service.test;
+
+
+
+import java.util.Optional;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import com.infy.ekart.dto.CustomerDTO;
+import com.infy.ekart.entity.Customer;
+import com.infy.ekart.exception.EKartException;
+import com.infy.ekart.repository.CustomerRepository;
+import com.infy.ekart.service.CustomerService;
+import com.infy.ekart.service.CustomerServiceImpl;
+
+@SpringBootTest
+public class CustomerServiceTest {
+//Write test cases here
+	@Mock
+	private CustomerRepository customerRepository;
+	@InjectMocks
+	CustomerService customerService = new CustomerServiceImpl();
+	
+	
+	
+	@Test
+	void authenticateCustomerValidTest() throws EKartException{
+		Customer customer = new Customer();
+		customer.setEmailId("tom@infosys.com");
+		customer.setPassword("Tom@123");
+		String emailId = "tom@infosys.com";
+		String password = "Tom@123";
+		Mockito.when(customerRepository.findById(Mockito.anyString().toLowerCase())).thenReturn(Optional.of(customer));		
+        CustomerDTO customerDTO = customerService .authenticateCustomer(emailId, password);
+        Assertions.assertEquals(customer.getEmailId(),customerDTO.getEmailId());
+        
+        }
+	
+	@Test
+	void authenticateCustomerInValidTest() throws EKartException{
+		String emailId = "tom@infosys.com";
+		String password = "Tom@123";
+		Mockito.when(customerRepository.findById(Mockito.anyString().toLowerCase())).thenReturn(Optional.empty());		
+        Exception exp = Assertions.assertThrows(EKartException.class,()->customerService .authenticateCustomer(emailId, password));
+		Assertions.assertEquals("CustomerService.CUSTOMER_NOT_FOUND",exp.getMessage());
+	
+	}
+	
+	@Test
+	void authenticateCustomerInValidTest2() throws EKartException{
+		Customer customer = new Customer();
+		customer.setEmailId("tom@infosys.com");
+		customer.setPassword("hary@123");
+		String emailId = "tom@infosys.com";
+		String password = "Tom@12";
+		Mockito.when(customerRepository.findById(customer.getEmailId().toLowerCase())).thenReturn(Optional.of(customer));		
+        Exception exp = Assertions.assertThrows(EKartException.class,()->customerService .authenticateCustomer(emailId, password));
+		Assertions.assertEquals("CustomerService.INVALID_CREDENTIALS",exp.getMessage());
+
+	}
+	
+	@Test
+	void registeredNewCustomerValidTest() throws EKartException{
+		Customer customer=new Customer();
+    	customer.setEmailId("sam@infosys.com");
+    	customer.setPassword("Sam@123");
+    	customer.setAddress("ABC");
+    	customer.setPhoneNumber("994445670");
+    	customer.setName("Sam");
+    	
+    	CustomerDTO customerDTO=new CustomerDTO();
+    	customerDTO.setEmailId("sam@infosys.com");
+    	customerDTO.setPassword("Sam@123");
+    	customerDTO.setAddress("ABC");
+    	customerDTO.setPhoneNumber("994445670");
+    	customerDTO.setName("Sam");
+			
+		Mockito.when(customerRepository.findById(customerDTO.getEmailId())).thenReturn(Optional.empty());
+		Mockito.when(customerRepository.findByPhoneNumber(Mockito.anyString())).thenReturn("");
+		Mockito.when(customerRepository.save(Mockito.any())).thenReturn(customer);
+       // String registredEmailId = customerService.registerNewCustomer(customerDTO);
+        Assertions.assertEquals(customerDTO.getEmailId(),customerService.registerNewCustomer(customerDTO));
+	}
+	
+	@Test
+	void registeredNewCustomerInValidTest() throws EKartException{
+		Customer customer=new Customer();
+    	customer.setEmailId("sam@infosys.com");
+    	customer.setPassword("Sam@123");
+    	customer.setAddress("ABC");
+    	customer.setPhoneNumber("994445670");
+    	customer.setName("Sam");
+    	
+    	CustomerDTO customerDTO=new CustomerDTO();
+    	customerDTO.setEmailId("sam@infosys.com");
+    	customerDTO.setPassword("Sam@123");
+    	customerDTO.setAddress("ABC");
+    	customerDTO.setPhoneNumber("994445670");
+    	customerDTO.setName("Sam");
+		
+		Mockito.when(customerRepository.findById(customerDTO.getEmailId())).thenReturn(Optional.of(customer));
+		Mockito.when(customerRepository.findByPhoneNumber(customerDTO.getPhoneNumber())).thenReturn(Boolean.TRUE.toString());
+        EKartException e = Assertions.assertThrows(EKartException.class,()->customerService .registerNewCustomer(customerDTO));
+		Assertions.assertEquals("CustomerService.EMAIL_ID_ALREADY_IN_USE",e.getMessage());
+		
+	}
+
+    @Test
+    
+    void registeredNewCustomerInValidTest2() throws EKartException{
+    	Customer customer=new Customer();
+    	customer.setEmailId("sam@infosys.com");
+    	customer.setPassword("Sam@123");
+    	customer.setAddress("ABC");
+    	customer.setPhoneNumber("994445670");
+    	customer.setName("Sam");
+    	
+    	CustomerDTO customerDTO=new CustomerDTO();
+    	customerDTO.setEmailId("sam@infosys.com");
+    	customerDTO.setPassword("Sam@123");
+    	customerDTO.setAddress("ABC");
+    	customerDTO.setPhoneNumber("994445670");
+    	customerDTO.setName("Sam");
+    	
+    	Mockito.when(customerRepository.findById(customerDTO.getEmailId())).thenReturn(Optional.empty());
+    	Mockito.when(customerRepository.findByPhoneNumber(customerDTO.getPhoneNumber())).thenReturn(Boolean.FALSE.toString());
+    	
+    	EKartException e= Assertions.assertThrows(EKartException.class, ()->customerService.registerNewCustomer(customerDTO));
+    	Assertions.assertEquals("CustomerService.PHONE_NUMBER_ALREADY_IN_USE", e.getMessage());
+		
+		
+    }
+    
+    @Test
+    void updateShippingAddressValidTest() throws EKartException{
+		Customer customer = new Customer();
+		 String customerEmailId = "tom@infosys.com";
+		 String address = "Alwal Hills";
+ 		 Mockito.when(customerRepository.findById(Mockito.anyString().toLowerCase())).thenReturn(Optional.of(customer));		
+		 Assertions.assertDoesNotThrow(()->customerService.updateShippingAddress(customerEmailId,address));
+		
+    }
+    
+    @Test
+    void updateShippingAddressInValidTest1() throws EKartException{
+		 String customerEmailId = "tom@infosys.com";
+         String address = "Alwal Hills";
+ 		Mockito.when(customerRepository.findById(Mockito.anyString().toLowerCase())).thenReturn(Optional.empty());		
+        Exception exp = Assertions.assertThrows(EKartException.class,()->customerService .updateShippingAddress(customerEmailId,address));
+		Assertions.assertEquals("CustomerService.CUSTOMER_NOT_FOUND",exp.getMessage());
+    }
+    
+    @Test
+    void deleteShippingAddressValidTest() throws EKartException{
+		Customer customer = new Customer();
+		 String customerEmailId = "tom@infosys.com";
+ 		 Mockito.when(customerRepository.findById(Mockito.anyString().toLowerCase())).thenReturn(Optional.of(customer));		
+		 Assertions.assertDoesNotThrow(()->customerService.deleteShippingAddress(customerEmailId));
+    }
+    
+    @Test
+    void deleteShippingAddressInValidTest() throws EKartException{
+         String customerEmailId = "tom@infosys.com";
+ 		 Mockito.when(customerRepository.findById(Mockito.anyString())).thenReturn(Optional.empty());		
+         Exception exp = Assertions.assertThrows(EKartException.class,()->customerService .deleteShippingAddress(customerEmailId));
+ 		Assertions.assertEquals("CustomerService.CUSTOMER_NOT_FOUND",exp.getMessage());
+    }
+ // write your logic here
+    @Test
+    public void getCustomerByEmailIdValidTest() throws EKartException{
+    	Customer customer=new Customer();
+    	
+    	customer.setEmailId("sam@infosys.com");
+    	customer.setPassword("Sam@123");
+    	customer.setAddress("ABC");
+    	customer.setPhoneNumber("994445670");
+    	customer.setName("Sam");
+    	
+    	CustomerDTO customerDTO=new CustomerDTO();
+    	customerDTO.setEmailId("sam@infosys.com");
+    	customerDTO.setPassword("Sam@123");
+    	customerDTO.setAddress("ABC");
+    	customerDTO.setPhoneNumber("994445670");
+    	customerDTO.setName("Sam");
+    	
+    	Mockito.when(customerRepository.findByEmailId(Mockito.anyString())).thenReturn(customer);
+    	Assertions.assertEquals(customerDTO.getEmailId(), customerService.getCustomerByEmailId(customer.getEmailId()).getEmailId());
+    	
+    }
+ // write your logic here
+    @Test
+    public void getCustomerByEmailIdInValidTest() throws EKartException{
+    	Customer customer=new Customer();
+    	customer.setEmailId("sam@infosys.com");
+    	customer.setPassword("Sam@123");
+    	customer.setAddress("ABC");
+    	customer.setPhoneNumber("994445670");
+    	customer.setName("Sam");
+    	
+    	Mockito.when(customerRepository.findById(Mockito.anyString())).thenReturn(Optional.empty());
+    	EKartException e=Assertions.assertThrows(EKartException.class,()-> customerService.getCustomerByEmailId(customer.getEmailId()));
+    	Assertions.assertEquals("CustomerService.CUSTOMER_NOT_FOUND", e.getMessage());
+    	
+    }
+
+
+ }
