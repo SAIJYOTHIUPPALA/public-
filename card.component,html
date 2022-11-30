@@ -1,0 +1,108 @@
+<
+    <body>
+       <div class="bg">
+       
+    <br><br>
+    <div class="card col-md-6 offset-3">
+    <div class="card-header" style="background-color:skyblue ;">
+      <h3 style="text-align:center;">Give your Card Details here!</h3>
+    </div>
+        <div class="formBlock card-body">
+          <form class="form" [formGroup]="addCardForm"  (ngSubmit)="addCard()">
+            <div class="form-group">
+              <label for="cardNumber">Card Number</label>
+              <input type="number" class="form-control" formControlName="cardNumber" id="cardNumber" />
+              <span id="cardNumberError" class="text-danger"
+                *ngIf="addCardForm.controls['cardNumber'].dirty && addCardForm.controls['cardNumber'].invalid">
+                Sorry, the entered card number is invalid!
+              </span>
+            </div><br>
+    
+            <div class="form-group">
+              <label>Card Type
+                <div class="form-check form-check-inline">
+                 
+                       <input type="radio" class="form-check-input" formControlName="cardType" name="cardType" id="cardType" value="DEBIT_CARD" />
+                DEBIT CARD
+                </div>
+                <div class="form-check form-check-inline">
+                        <input type="radio" class="form-check-input" formControlName="cardType" name="cardType" id="cardType" value="CREDIT_CARD" />
+                        CREDIT CARD
+                   
+                        </div></label>
+                <span id=" cardTypeError" class="text-danger"
+                  *ngIf="addCardForm.controls['cardType'].dirty && addCardForm.controls['cardType'].invalid">
+                  Sorry, the entered card number is invalid!
+                </span>
+             
+            </div><br>
+    
+              <div class="form-group">
+                <label for="nameOnCard">Name on Card</label>
+                <input type="text" class="form-control" formControlName="nameOnCard" id="nameOnCard" />
+                <span id="nameOnCardError" class="text-danger"
+                  *ngIf="addCardForm.controls['nameOnCard'].dirty && addCardForm.controls['nameOnCard'].invalid">
+                  Enter Valid Name!
+                </span>
+              </div><br>
+    
+              <div class="form-group">
+                <label for="emailId">Email Id</label>
+                <input type="text" class="form-control" formControlName="emailId" id="emailId" #email (keyup)="addEmail(email.value)" />
+                <span id="emailIdError" class="text-danger"
+                  *ngIf="addCardForm.controls['emailId'].dirty && addCardForm.controls['emailId'].invalid">
+                  Enter Valid email!
+                </span>
+              </div><br>
+    
+    
+              <div class="form-group">
+                <label for="expiryDate">Expiry Date</label>
+                <input type="date" class="form-control" formControlName="expiryDate" id="expiryDate" />
+                <span id=" expiryDateError" class="text-danger"
+                  *ngIf="addCardForm.controls['expiryDate'].dirty && addCardForm.controls['expiryDate'].invalid">
+                  Entered date must be a future date!
+                </span>
+              </div><br>
+    
+    
+              <div class="form-group">
+                <label for="cvv">Cvv</label>
+                <input type="number" class="form-control" formControlName="cvv" id="cvv" />
+                <span id=" cvvError" class="text-danger"
+                  *ngIf="addCardForm.controls['cvv'].dirty && addCardForm.controls['cvv'].invalid">
+                  Enter Valid CVV!
+                </span>
+              </div><br>
+    
+             
+              <!-- <button type="submit" class="btn btn-primary" [disabled]="addCardForm.invalid || addCardForm.pristine">Add Card</button> -->
+             
+              <button type="submit" class="btn btn-primary" [disabled]="addCardForm.invalid || addCardForm.pristine"
+             >Add Card</button>
+            </form>
+            </div>
+             <div class="text-success" *ngIf="successMessage!=null">
+               <span>
+                 {{successMessage}}
+               </span>   
+             </div>
+             <div class="text-danger" *ngIf="errorMessage!=null">
+               <span>
+                 {{errorMessage}}
+               </span>   
+             </div>
+            </div> 
+          </div>
+     </body>
+        
+           
+        
+    
+        
+    
+            
+            
+    
+          
+         
