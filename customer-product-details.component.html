@@ -1,0 +1,98 @@
+<div class="row">
+
+    <!-- Write the code to display the success and error message after adding product to the cart -->
+    <div class="col-12">
+        <br>
+        
+            <h5 *ngIf="successMessage!=null && successMessage!=''" class="success-message">
+                {{successMessage}}
+            </h5>
+            <h5 *ngIf="errorMessage!=null && errorMessage!=''" class="error-message">
+                {{errorMessage}}
+            </h5>
+          <br>
+    </div>
+
+
+    <div class="card-deck" style="width: 267px; position: relative;">
+
+        <!-- Write the code to display the selected product image and Add to Cart button -->
+        <div class="card bg-light">
+            <img class="card-img-top" [src]="'assets/resources/'+ selectedProduct.productId+'.jpg'"
+                alt="Image Not Found" onError="this.src='Group-34-Client\src\assets/resources/404.png'"><br><br>
+            <div class="card-body">
+                <div class="row">
+                    <div class="offset-md-3">
+                        <button class="btn btn-warning " (click)="addToCart()">Add To Cart</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+        
+   
+
+
+    <div class="card " style="width: 353px;">
+
+        <!-- Write the code to display the selected product details like 
+            name, brand, category, features and price -->
+
+
+            <div class="text-left text-block">
+                <h4>
+                    <ins><b>{{selectedProduct.brand+" "+selectedProduct.name}}</b></ins>
+                </h4>
+            </div>
+            <table class="table table-borderless text-black">
+                <tr>
+                    <th>
+                        <span class="text-muted"><b> Category</b></span>
+                    </th>
+                    <td>
+                        {{selectedProduct.category}}
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        <span class="text-muted"><b>Features</b></span>
+                    </th>
+                    <td>
+                        <dl class="text-justify">
+                            <div *ngFor="let item of selectedProduct.description|productDescription">
+                                <dd>{{item}}</dd>
+                            </div>
+                        </dl>
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        <span class="text-muted"><b>Price</b></span>
+                    </th>
+                    <td>
+                        <span class="success-message">
+    
+                            <strong>Rs.{{selectedProduct.price * (1-selectedProduct.discount/100)|number:'1.2-2'}}</strong>
+    
+                            <div class="clearfix"></div>
+                            <span class="field-error-message">
+                                <del>Rs.{{selectedProduct.price |number:'1.2-2'}}</del>
+                            </span>
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        <span class="text-muted"><b>Discount</b></span>
+                    </th>
+                    <td>
+                        <strong>
+                            <span class="success-message">{{selectedProduct.discount/100 | percent}}</span>
+                        </strong>
+                    </td>
+                </tr>
+            </table>
+        
+    </div>
+
+</div>
