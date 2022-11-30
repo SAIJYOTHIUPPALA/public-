@@ -1,0 +1,10 @@
+this.customerCommonService.addProductToCart(cartToAdd).subscribe(
+                (response)=>{ 
+                    this.successMessage=""+response
+                },
+                (error)=>{
+                    this.errorMessage=""+error
+                }
+            )
+              cart.push(cartToAdd);
+               this.customerCommonService.updateCartList(cart)
